@@ -9,11 +9,20 @@ import { formatCount } from '@/lib/time';
 type ActionRailProps = {
   show: Series;
   episode: Episode;
+  commentTotal: number;
   onEpisodes: () => void;
+  onComments: () => void;
   style?: StyleProp<ViewStyle>;
 };
 
-export function ActionRail({ show, episode, onEpisodes, style }: ActionRailProps) {
+export function ActionRail({
+  show,
+  episode,
+  commentTotal,
+  onEpisodes,
+  onComments,
+  style,
+}: ActionRailProps) {
   const { isLiked, toggleLiked, isSaved, toggleSaved } = usePlayback();
   const liked = isLiked(episode.id);
   const saved = isSaved(show.id);
@@ -26,6 +35,7 @@ export function ActionRail({ show, episode, onEpisodes, style }: ActionRailProps
         label={formatCount(show.likes + (liked ? 1 : 0))}
         onPress={() => toggleLiked(episode.id)}
       />
+      <RailButton icon="comment" label={formatCount(commentTotal)} onPress={onComments} />
       <RailButton
         icon={saved ? 'bookmarkFill' : 'bookmark'}
         color={saved ? colors.gold : colors.text}
@@ -38,7 +48,7 @@ export function ActionRail({ show, episode, onEpisodes, style }: ActionRailProps
         label="Share"
         onPress={() => {
           Share.share({
-            message: `Watching ${show.title}, episode ${episode.number}, on DramaShorts`,
+            message: `Watching ${show.title}, episode ${episode.number}, on DramaLama`,
           }).catch(() => {});
         }}
       />

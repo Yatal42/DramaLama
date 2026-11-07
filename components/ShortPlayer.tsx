@@ -4,6 +4,7 @@ import { useEffect, useEffectEvent, useRef, useState, type ReactNode } from 'rea
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { ActionRail } from '@/components/ActionRail';
+import { CommentSheet, totalComments } from '@/components/CommentSheet';
 import { Icon } from '@/components/Icon';
 import { Poster } from '@/components/Poster';
 import { colors, gradients } from '@/constants/theme';
@@ -64,6 +65,8 @@ function ShortPlayer({
   const [duration, setDuration] = useState(episode.durationSec);
   const [trackWidth, setTrackWidth] = useState(1);
   const [wasActive, setWasActive] = useState(active);
+  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [commentTotal, setCommentTotal] = useState(() => totalComments(episode.id));
   const startedRef = useRef(false);
   const handleEnded = useEffectEvent(() => onEnded?.());
 
@@ -178,7 +181,13 @@ function ShortPlayer({
           <View pointerEvents="box-none" style={styles.info}>
             {info}
           </View>
-          <ActionRail show={show} episode={episode} onEpisodes={onEpisodes} />
+          <ActionRail
+            show={show}
+            episode={episode}
+            commentTotal={commentTotal}
+            onEpisodes={onEpisodes}
+            onComments={() => setCommentsOpen(true)}
+          />
         </View>
         <Pressable
           onLayout={(event) => setTrackWidth(event.nativeEvent.layout.width)}
@@ -196,6 +205,13 @@ function ShortPlayer({
           </View>
         </Pressable>
       </View>
+
+      <CommentSheet
+        episode={episode}
+        visible={commentsOpen}
+        onClose={() => setCommentsOpen(false)}
+        onPosted={() => setCommentTotal(totalComments(episode.id))}
+      />
     </View>
   );
 }

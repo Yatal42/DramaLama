@@ -29,6 +29,20 @@ const icons = {
   history: { ios: 'clock.arrow.circlepath', android: 'history', web: 'history' },
   trending: { ios: 'chart.line.uptrend.xyaxis', android: 'trending_up', web: 'trending_up' },
   grid: { ios: 'square.grid.2x2.fill', android: 'grid_view', web: 'grid_view' },
+  comment: { ios: 'bubble.right.fill', android: 'chat_bubble', web: 'chat_bubble' },
+  profile: { ios: 'person.crop.circle.fill', android: 'account_circle', web: 'account_circle' },
+  store: { ios: 'bag.fill', android: 'shopping_bag', web: 'shopping_bag' },
+  gift: { ios: 'gift.fill', android: 'redeem', web: 'redeem' },
+  settings: { ios: 'gearshape.fill', android: 'settings', web: 'settings' },
+  support: { ios: 'questionmark.circle.fill', android: 'help', web: 'help' },
+  edit: { ios: 'pencil', android: 'edit', web: 'edit' },
+  preferences: { ios: 'slider.horizontal.3', android: 'tune', web: 'tune' },
+  send: { ios: 'arrow.up.circle.fill', android: 'send', web: 'send' },
+  flag: { ios: 'flag', android: 'flag', web: 'flag' },
+  mission: { ios: 'target', android: 'track_changes', web: 'track_changes' },
+  crown: { ios: 'crown.fill', android: 'workspace_premium', web: 'workspace_premium' },
+  coin: { ios: 'dollarsign.circle.fill', android: 'paid', web: 'paid' },
+  points: { ios: 'star.circle.fill', android: 'stars', web: 'stars' },
 } satisfies Record<string, SymbolViewProps['name']>;
 
 export type IconName = keyof typeof icons;

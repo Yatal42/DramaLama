@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { CompanionButton } from '@/components/CompanionButton';
 import { Icon } from '@/components/Icon';
 import { Poster } from '@/components/Poster';
 import { colors, spacing } from '@/constants/theme';
@@ -28,79 +29,82 @@ export default function LibraryScreen() {
   const gridWidth = (width - spacing.screen * 2 - spacing.gap * 2) / 3;
 
   return (
-    <ScrollView
-      style={styles.screen}
-      contentContainerStyle={{ paddingTop: insets.top + 10, paddingBottom: 32 }}>
-      <Text style={styles.title}>Library</Text>
+    <View style={styles.screen}>
+      <ScrollView
+        style={styles.screen}
+        contentContainerStyle={{ paddingTop: insets.top + 10, paddingBottom: 100 }}>
+        <Text style={styles.title}>Library</Text>
 
-      <View style={styles.segment}>
-        <SegmentButton
-          label={`Continue watching${history.length ? ` · ${history.length}` : ''}`}
-          selected={tab === 'history'}
-          onPress={() => setTab('history')}
-        />
-        <SegmentButton
-          label={`My list${savedShows.length ? ` · ${savedShows.length}` : ''}`}
-          selected={tab === 'saved'}
-          onPress={() => setTab('saved')}
-        />
-      </View>
+        <View style={styles.segment}>
+          <SegmentButton
+            label={`Continue watching${history.length ? ` · ${history.length}` : ''}`}
+            selected={tab === 'history'}
+            onPress={() => setTab('history')}
+          />
+          <SegmentButton
+            label={`My list${savedShows.length ? ` · ${savedShows.length}` : ''}`}
+            selected={tab === 'saved'}
+            onPress={() => setTab('saved')}
+          />
+        </View>
 
-      {tab === 'history' ? (
-        history.length === 0 ? (
+        {tab === 'history' ? (
+          history.length === 0 ? (
+            <Empty
+              title="You haven't started anything yet"
+              body="Start an episode and it will show up here, so you can pick up right where you left off."
+            />
+          ) : (
+            history.map(({ show, episode }) => {
+              const ratio = episode.number / show.episodes.length;
+              return (
+                <Pressable
+                  key={show.id}
+                  onPress={() => openEpisode(show.id, episode.id)}
+                  style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
+                  <Poster show={show} showBadge={false} showMeta={false} style={styles.thumb} radius={8} />
+                  <View style={styles.copy}>
+                    <Text style={styles.showTitle} numberOfLines={1}>
+                      {show.title}
+                    </Text>
+                    <Text style={styles.episodeLine}>
+                      Episode {episode.number} of {show.episodes.length}
+                    </Text>
+                    <View style={styles.track}>
+                      <View style={[styles.fill, { width: `${ratio * 100}%` }]} />
+                    </View>
+                    <Text style={styles.percent}>{Math.round(ratio * 100)}% of series</Text>
+                  </View>
+                  <View style={styles.playButton}>
+                    <Icon name="play" size={16} color={colors.onAccent} />
+                  </View>
+                </Pressable>
+              );
+            })
+          )
+        ) : savedShows.length === 0 ? (
           <Empty
-            title="You haven't started anything yet"
-            body="Start an episode and it will show up here, so you can pick up right where you left off."
+            title="Your list is empty"
+            body="Tap the save icon on a series or in the player and it will appear here."
           />
         ) : (
-          history.map(({ show, episode }) => {
-            const ratio = episode.number / show.episodes.length;
-            return (
+          <View style={styles.grid}>
+            {savedShows.map((show) => (
               <Pressable
                 key={show.id}
-                onPress={() => openEpisode(show.id, episode.id)}
-                style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
-                <Poster show={show} showBadge={false} showMeta={false} style={styles.thumb} radius={8} />
-                <View style={styles.copy}>
-                  <Text style={styles.showTitle} numberOfLines={1}>
-                    {show.title}
-                  </Text>
-                  <Text style={styles.episodeLine}>
-                    Episode {episode.number} of {show.episodes.length}
-                  </Text>
-                  <View style={styles.track}>
-                    <View style={[styles.fill, { width: `${ratio * 100}%` }]} />
-                  </View>
-                  <Text style={styles.percent}>{Math.round(ratio * 100)}% of series</Text>
-                </View>
-                <View style={styles.playButton}>
-                  <Icon name="play" size={16} color={colors.onAccent} />
-                </View>
+                onPress={() => openSeries(show.id)}
+                style={({ pressed }) => [{ width: gridWidth }, pressed && styles.pressed]}>
+                <Poster show={show} style={{ width: gridWidth, height: gridWidth * 1.42 }} />
+                <Text style={styles.gridTitle} numberOfLines={1}>
+                  {show.title}
+                </Text>
               </Pressable>
-            );
-          })
-        )
-      ) : savedShows.length === 0 ? (
-        <Empty
-          title="Your list is empty"
-          body="Tap the save icon on a series or in the player and it will appear here."
-        />
-      ) : (
-        <View style={styles.grid}>
-          {savedShows.map((show) => (
-            <Pressable
-              key={show.id}
-              onPress={() => openSeries(show.id)}
-              style={({ pressed }) => [{ width: gridWidth }, pressed && styles.pressed]}>
-              <Poster show={show} style={{ width: gridWidth, height: gridWidth * 1.42 }} />
-              <Text style={styles.gridTitle} numberOfLines={1}>
-                {show.title}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-      )}
-    </ScrollView>
+            ))}
+          </View>
+        )}
+      </ScrollView>
+      <CompanionButton />
+    </View>
   );
 }
 

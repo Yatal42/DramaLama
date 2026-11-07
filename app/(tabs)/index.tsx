@@ -12,6 +12,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CategoryTile } from '@/components/CategoryTile';
+import { CompanionButton } from '@/components/CompanionButton';
 import { Icon } from '@/components/Icon';
 import { BadgeTag, Poster } from '@/components/Poster';
 import { colors, gradients, spacing } from '@/constants/theme';
@@ -51,11 +52,11 @@ export default function HomeScreen() {
       style={styles.screen}
       onLayout={(event) => setFrameWidth(event.nativeEvent.layout.width)}>
       <ScrollView
-        contentContainerStyle={{ paddingTop: insets.top + 6, paddingBottom: 32 }}
+        contentContainerStyle={{ paddingTop: insets.top + 6, paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <Text style={styles.brand}>
-            Drama<Text style={styles.brandAccent}>Shorts</Text>
+            Drama<Text style={styles.brandAccent}>Lama</Text>
           </Text>
           <Pressable
             onPress={() => openSearch()}
@@ -193,6 +194,7 @@ export default function HomeScreen() {
           </View>
         </Section>
       </ScrollView>
+      <CompanionButton />
     </View>
   );
 }

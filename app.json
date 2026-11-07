@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "DramaShorts",
-    "slug": "DramaShorts",
+    "name": "DramaLama",
+    "slug": "DramaLama",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "dramashorts",
+    "scheme": "dramalama",
     "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true

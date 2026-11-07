@@ -3,17 +3,19 @@ import { useCallback, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { EpisodeSheet } from '@/components/EpisodeSheet';
 import { Icon } from '@/components/Icon';
 import { ShortPage } from '@/components/ShortPlayer';
 import { colors } from '@/constants/theme';
 import { trending, type Series } from '@/data/catalog';
-import { openEpisode, openSeries } from '@/lib/nav';
+import { openEpisode } from '@/lib/nav';
 
 export default function ForYouScreen() {
   const insets = useSafeAreaInsets();
   const [height, setHeight] = useState(0);
   const [index, setIndex] = useState(0);
   const [focused, setFocused] = useState(true);
+  const [sheetShow, setSheetShow] = useState<Series | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -27,7 +29,7 @@ export default function ForYouScreen() {
       {height > 0 ? (
         <FlatList
           data={trending}
-          extraData={`${index}-${focused}`}
+          extraData={`${index}-${focused}-${sheetShow?.id}`}
           keyExtractor={(item) => item.id}
           pagingEnabled
           showsVerticalScrollIndicator={false}
@@ -45,9 +47,9 @@ export default function ForYouScreen() {
               episode={item.episodes[0]}
               height={height}
               near={Math.abs(itemIndex - index) <= 1}
-              active={focused && itemIndex === index}
+              active={focused && !sheetShow && itemIndex === index}
               loop
-              onEpisodes={() => openSeries(item.id)}
+              onEpisodes={() => setSheetShow(item)}
               info={<FeedInfo show={item} />}
             />
           )}
@@ -57,6 +59,16 @@ export default function ForYouScreen() {
       <View pointerEvents="none" style={[styles.top, { paddingTop: insets.top + 8 }]}>
         <Text style={styles.topTitle}>For You</Text>
       </View>
+
+      {sheetShow ? (
+        <EpisodeSheet
+          show={sheetShow}
+          visible
+          currentNumber={1}
+          onClose={() => setSheetShow(null)}
+          onSelect={(episode) => openEpisode(sheetShow.id, episode.id)}
+        />
+      ) : null}
     </View>
   );
 }
